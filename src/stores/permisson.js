@@ -18,7 +18,6 @@ export const usePermissionStore = defineStore('permission', () => {
         })
         // 使用 permission.value 赋值
         permission.value = res.data.list || []
-        console.log('permission-value', permission.value)
     }
 
     return {
@@ -33,26 +32,16 @@ const modules = import.meta.glob('../views/**/*.vue')
 function generateRoutes(routes, parentPath) {
     if (!routes) return []
     return routes.map((route) => {
-        const realPath =
-            parentPath === undefined
-                ? route.path
-                : `${parentPath}/${route.path}`
+        const realPath = parentPath === undefined ? route.path : `${parentPath}/${route.path}`
 
-        const filePath = route.file_path.includes('index')
-            ? route.file_path
-            : 'index'
+        const filePath = route.file_path.includes('index') ? route.file_path : 'index'
         // console.log('filePath:', filePath)
         // console.log(Object.keys(modules))
-        const component = route.file_path.match(/^(\/)?layout(\/index)?$/)
-            ? () => import('@/layout/index.vue')
-            : modules[`../views/${filePath}.vue`]
+        const component = route.file_path.match(/^(\/)?layout(\/index)?$/) ? () => import('@/layout/index.vue') : modules[`../views/${filePath}.vue`]
 
         // console.log('component:', component)
         // console.log('component2:', component2)
-        const children =
-            route.children !== ''
-                ? generateRoutes(route.children, route.path)
-                : []
+        const children = route.children !== '' ? generateRoutes(route.children, route.path) : []
 
         const newRoute = {
             ...route,

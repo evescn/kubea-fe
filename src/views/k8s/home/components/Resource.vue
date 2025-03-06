@@ -1,5 +1,5 @@
 <script setup>
-import { apiGetK8sAllRes } from '@/api/kubea'
+import { apiGetK8sAllRes } from '@/api/kubea/kubea'
 import { onMounted, reactive, ref } from 'vue'
 
 const color = reactive({
@@ -18,7 +18,6 @@ const getK8sAllRes = async () => {
     if (res.data) {
         resourceList.value = res.data || []
     }
-    console.log('resourceList', resourceList)
 }
 
 onMounted(() => {

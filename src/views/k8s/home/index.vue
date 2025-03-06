@@ -4,12 +4,16 @@ import Resource from './components/Resource.vue'
 import SearchForm from './components/SearchForm.vue'
 
 import { dayjs } from '@arco-design/web-vue/es/_utils/date'
-import { apiGetK8sEvents } from '@/api/kubea'
+import { apiGetK8sEvents } from '@/api/kubea/kubea'
 import { onMounted, ref } from 'vue'
+import { useServiceStore } from '@/stores'
+
+const serviceStore = useServiceStore()
 
 const query = ref({
     page: 1,
-    limit: 10
+    limit: 10,
+    cluster: serviceStore.service.k8s_cluster
 })
 
 const tableColumns = ref([
@@ -51,12 +55,8 @@ const loadSpin = ref(true)
 
 // 获取列表
 async function fetchTableList(searchParams = {}) {
-    const { page, limit } = query.value || {}
-    let cluster = 'TST'
     let params = {
-        page,
-        limit,
-        cluster,
+        ...query.value,
         ...searchParams
     }
     loadTable.value = true

@@ -11,12 +11,10 @@
                 </a-sub-menu>
             </template>
             <template v-else>
-                <a-menu-item
-                    v-if="item.hidden === 0"
-                    :key="item.name"
-                    @click="jumpTo(item.realPath)"
-                >
-                    <!--{{ item.meta.title  }}-->
+                <a-menu-item v-if="item.hidden === 0" :key="item.name" @click="jumpTo(item.realPath)">
+                    <template #icon>
+                        <component :is="item.meta.icon" />
+                    </template>
                     {{ item.meta.title }}
                 </a-menu-item>
             </template>
@@ -27,18 +25,14 @@
 <script setup>
 import { useRouter } from 'vue-router'
 
-const props = defineProps({
+defineProps({
     routes: {}
 })
-// defineProps<{
-//     routes
-// }>()
 
 const router = useRouter()
 const jumpTo = (path) => {
     router.push({
         path
     })
-    console.log(props.routes)
 }
 </script>

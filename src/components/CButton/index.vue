@@ -1,11 +1,3 @@
-<template>
-    <a-button :class="customClass" :disabled="disabled" :size="customSize" :type="customType">
-        <template v-if="iconType" #icon>
-            <component :is="iconType" />
-        </template>
-        <slot />
-    </a-button>
-</template>
 <script>
 import { defineComponent, ref, watch } from 'vue'
 
@@ -32,9 +24,9 @@ export default defineComponent({
                         customClass.value = 'c-button-warning'
                         customType.value = 'default'
                         break
-                    case 'error':
-                        customClass.value = 'c-button-error'
-                        customType.value = 'default'
+                    case 'outline':
+                        customClass.value = 'c-button-outline'
+                        customType.value = 'outline'
                         break
                     case 'success':
                         customClass.value = 'c-button-success'
@@ -100,6 +92,16 @@ export default defineComponent({
     }
 })
 </script>
+
+<template>
+    <a-button :class="customClass" :disabled="disabled" :size="customSize" :type="customType">
+        <template v-if="iconType" #icon>
+            <component :is="iconType" />
+        </template>
+        <slot />
+    </a-button>
+</template>
+
 <style scoped>
 .c-button-primary {
     color: #3991e3;
@@ -148,23 +150,23 @@ export default defineComponent({
     box-shadow: none;
 }
 
-.c-button-error {
+.c-button-outline {
     //color: #a3a2a3;
     color: #a3a2a3;
     background-color: #84808238;
     border-color: #a3a2a3;
 }
 
-.c-button-error:hover {
+.c-button-outline:hover {
     color: #fff;
     background-color: #8480826d;
     border-color: #8480826d;
 }
 
-.c-button-error[disabled],
-.c-button-error[disabled]:hover,
-.c-button-error[disabled]:focus,
-.c-button-error[disabled]:active {
+.c-button-outline[disabled],
+.c-button-outline[disabled]:hover,
+.c-button-outline[disabled]:focus,
+.c-button-outline[disabled]:active {
     color: rgba(0, 0, 0, 0.25);
     //background: #f5f5f5;
     background: rgb(96, 93, 93);

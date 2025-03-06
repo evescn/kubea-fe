@@ -29,7 +29,6 @@ router.beforeEach(async (to, from, next) => {
     // 如果没有token, 且访问的是非登录页，拦截到登录，其他情况正常放行
     const useStore = useUserStore()
     if (to.path === '/login') {
-        console.log('123123')
         next()
     } else if (!useStore.token && to.path !== '/login') {
         next('/login')
@@ -45,9 +44,6 @@ router.beforeEach(async (to, from, next) => {
             store.routes.forEach((item) => {
                 router.addRoute(item)
             })
-            console.log('router.getRoutes', router.getRoutes())
-            console.log(router)
-            console.log('to', to)
             next(to)
         }
         next()

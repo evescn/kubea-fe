@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+import { useServiceStore } from '@/stores'
+
+const serviceStore = useServiceStore()
+</script>
 
 <template>
     <a-row class="home-row1">
@@ -10,7 +14,7 @@
         <a-col :span="7">
             <div style="font-size: 13px">集群数</div>
             <div style="text-align: center; font-size: 30px; font-weight: bold">
-                {{ clusterNum }}
+                {{ serviceStore.service.cluster_num }}
             </div>
         </a-col>
         <a-divider direction="vertical" style="height: 70px; background-color: rgb(89, 104, 173)"></a-divider>
@@ -23,7 +27,6 @@
 
 <style scoped>
 .home-row1 {
-    background-color: rgb(33, 54, 96) !important;
     padding: 20px;
     margin-bottom: 15px;
 }

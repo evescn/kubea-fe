@@ -24,9 +24,9 @@ export default defineComponent({
                         customClass.value = 'c-button-warning'
                         customType.value = 'default'
                         break
-                    case 'outline':
-                        customClass.value = 'c-button-outline'
-                        customType.value = 'outline'
+                    case 'error':
+                        customClass.value = 'c-button-error'
+                        customType.value = 'error'
                         break
                     case 'success':
                         customClass.value = 'c-button-success'
@@ -150,23 +150,23 @@ export default defineComponent({
     box-shadow: none;
 }
 
-.c-button-outline {
+.c-button-error {
     //color: #a3a2a3;
     color: #a3a2a3;
     background-color: #84808238;
     border-color: #a3a2a3;
 }
 
-.c-button-outline:hover {
+.c-button-error:hover {
     color: #fff;
     background-color: #8480826d;
     border-color: #8480826d;
 }
 
-.c-button-outline[disabled],
-.c-button-outline[disabled]:hover,
-.c-button-outline[disabled]:focus,
-.c-button-outline[disabled]:active {
+.c-button-error[disabled],
+.c-button-error[disabled]:hover,
+.c-button-error[disabled]:focus,
+.c-button-error[disabled]:active {
     color: rgba(0, 0, 0, 0.25);
     //background: #f5f5f5;
     background: rgb(96, 93, 93);

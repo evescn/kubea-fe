@@ -1,10 +1,13 @@
 <!-- Layout.vue -->
 <template>
-    <a-layout class="layout">
+    <a-layout>
         <PageHeader />
-        <a-layout>
+        <a-layout style="height: calc(100vh - 68px)">
             <PageAside />
-            <PageMain />
+            <a-layout style="padding: 0 24px">
+                <PageMain />
+                <PageFooter />
+            </a-layout>
         </a-layout>
     </a-layout>
 </template>
@@ -13,61 +16,7 @@
 import PageHeader from '@/layout/page-header/PageHeader.vue'
 import PageAside from '@/layout/page-aside/PageAside.vue'
 import PageMain from '@/layout/page-main/PageMain.vue'
-import { provideMenu } from './hooks/useMenu'
-
-provideMenu()
+import PageFooter from '@/layout/page-footer/PageFooter.vue'
 </script>
 
-<style lang="less" scoped>
-@nav-size-height: 60px;
-@layout-max-width: 1100px;
-
-.layout {
-    width: 100%;
-    height: 100%;
-}
-
-.layout-navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    width: 100%;
-    height: @nav-size-height;
-}
-
-.arco-layout-has-sider {
-    overflow-y: hidden;
-}
-
-.layout-sider {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 99;
-    height: 100%;
-    transition: all 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
-
-    &::after {
-        position: absolute;
-        top: 0;
-        right: -1px;
-        display: block;
-        width: 1px;
-        height: 100%;
-        background-color: var(--color-border);
-        content: '';
-    }
-
-    > :deep(.arco-layout-sider-children) {
-        overflow-y: hidden;
-    }
-}
-
-.layout-content {
-    min-height: 100vh;
-    overflow-y: hidden;
-    background-color: var(--color-fill-2);
-    transition: padding 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
-}
-</style>
+<style scoped></style>

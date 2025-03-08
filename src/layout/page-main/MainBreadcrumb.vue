@@ -1,18 +1,15 @@
 <template>
-    <div class="container-breadcrumb--right mb-10 mt-10">
-        <a-breadcrumb v-if="list.length" class="container-breadcrumb">
-            <a-breadcrumb-item>
-                <icon-apps />
+    <!-- 面包屑 -->
+    <a-breadcrumb style="margin: 10px 0">
+        <a-breadcrumb-item>
+            <appstore-outlined />
+        </a-breadcrumb-item>
+        <template v-for="item in list">
+            <a-breadcrumb-item v-if="item" :key="item">
+                {{ item }}
             </a-breadcrumb-item>
-
-            <template v-for="item in list">
-                <a-breadcrumb-item v-if="item" :key="item">
-                    {{ item }}
-                </a-breadcrumb-item>
-            </template>
-        </a-breadcrumb>
-        <slot></slot>
-    </div>
+        </template>
+    </a-breadcrumb>
 </template>
 
 <script setup>
@@ -26,15 +23,3 @@ const titleList = computed(() => {
 })
 const list = breadcrumbs || titleList
 </script>
-
-<style lang="less" scoped>
-.container-breadcrumb {
-    padding: 10px;
-}
-
-.container-breadcrumb--right {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-</style>

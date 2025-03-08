@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
-// 用户权限接口
+// k8s all res 接口
 export function apiGetK8sAllRes(params) {
     return request.get(`/api/k8s/allres`, { params: params })
 }
 
-// Events 事件
+// events 事件
 export function apiGetK8sEvents(params) {
     return request.get(`/api/k8s/events`, { params: params })
 }
@@ -31,7 +31,10 @@ export function apiGetNameSpaceDetail(params) {
     return request.get(`/api/k8s/namespace/detail`, { params: params })
 }
 
-// k8sNamespaceDetail: baseHost + '/api/k8s/namespace/detail',
+export function apiUpdateNameSpace(params) {
+    return request.put(`/api/k8s/namespace`, params)
+}
+
 // k8sNamespaceDel: baseHost + '/api/k8s/namespace',
 
 // pv
@@ -41,3 +44,31 @@ export function apiGetPvsList(params) {
 
 // k8sPvDetail: baseHost + '/api/k8s/pv/detail',
 // k8sPvDel: baseHost + '/api/k8s/pv',
+
+// pod
+export function apiGetPodsList(params) {
+    return request.get(`/api/k8s/pods`, { params: params })
+}
+
+export function apiGetPodDetail(params) {
+    return request.get(`/api/k8s/pod/detail`, { params: params })
+}
+
+export function apiUpdatePod(params) {
+    return request.put(`/api/k8s/pod`, params)
+}
+
+export function apiDelPod(params) {
+    return request.delete(`/api/k8s/pod`, { data: params })
+}
+
+export function apiGetPodContainer(params) {
+    return request.get(`/api/k8s/pod/container`, { params: params })
+}
+
+export function apiGetPodLog(params) {
+    return request.get(`/api/k8s/pod/log`, { params: params })
+}
+
+// k8sPodNumNp: baseHost + '/api/k8s/pod/numnp',
+// k8sTerminalWs: wsHost + '/ws',

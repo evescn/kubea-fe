@@ -1,5 +1,5 @@
 <template>
-    <a-menu :selected-keys="selectedKey" auto-open-selected class="aside-menu">
+    <a-menu :selected-keys="selectedKey" :style="{ height: '100%', boderRight: 0 }" mode="inline">
         <AsideMenuItem :routes="routes" />
     </a-menu>
 </template>
@@ -21,7 +21,7 @@ watchEffect(() => {
 </script>
 
 <style scoped>
-.aside-menu {
-    height: 100%;
+.ant-menu-item {
+    margin: 0 !important;
 }
 </style>

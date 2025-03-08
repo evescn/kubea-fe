@@ -9,12 +9,6 @@ const userStore = useUserStore()
 const logout = () => {
     userStore.removeToken()
 
-    // 移除 roleId
-    // localStorage.removeItem('role')
-    // 移除环境信息
-    // localStorage.removeItem('urlEnv')
-    // localStorage.removeItem('urlEnvID')
-
     // 跳转到 /login 页面
     router.push('/login')
 }

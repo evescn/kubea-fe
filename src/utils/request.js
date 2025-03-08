@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores'
 import router from '@/router'
-import { Message } from '@arco-design/web-vue'
+import { message } from 'ant-design-vue'
 
 const baseURL = 'http://10.0.0.100:29000'
 
@@ -32,7 +32,7 @@ instance.interceptors.response.use(
             return res.data
         }
 
-        if (!res.data.msg) {
+        if (!res.msg) {
             let res = {
                 data: res.data,
                 msg: '服务端异常: ' + res.status + ' ' + res.statusText
@@ -40,7 +40,7 @@ instance.interceptors.response.use(
         }
         // TODO 3. 处理业务失败
         // 处理业务失败, 给错误提示，抛出错误
-        Message.error(res.msg || '服务异常')
+        message.error(res.msg || '服务异常')
         return Promise.reject(res)
     },
     (err) => {
@@ -51,7 +51,7 @@ instance.interceptors.response.use(
         }
 
         // 错误的默认情况 => 只要给提示
-        Message.error(err.response.data.message || '服务异常')
+        message.error(err.response.data.msg || '服务异常')
         return Promise.reject(err)
     }
 )

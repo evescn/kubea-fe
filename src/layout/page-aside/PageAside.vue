@@ -1,34 +1,28 @@
 <template>
-    <a-layout-sider v-if="!isSmallScreen" breakpoint="xl" collapsible>
-        <!-- <AsideLogo /> -->
+    <a-layout-sider v-model:collapsed="collapsed" collapsible width="240">
         <AsideMenu />
-        <template #trigger="{ collapsed }">
-            <icon-menu-unfold v-if="collapsed" />
-            <icon-menu-fold v-else />
-        </template>
     </a-layout-sider>
-
-    <a-drawer
-        :closable="false"
-        :footer="false"
-        :visible="isMenuVisiable"
-        mask-closable
-        placement="left"
-        @cancel="drawerCancel"
-    >
-        <AsideMenu />
-    </a-drawer>
 </template>
 
 <script setup>
 import AsideMenu from './AsideMenu.vue'
-import { injectMenu } from '../hooks/useMenu'
-import useScreenSize from '../hooks/useScreenSize'
+import { ref } from 'vue'
 
-const { isSmallScreen } = useScreenSize()
-
-const { isMenuVisiable } = injectMenu()
-const drawerCancel = () => {
-    isMenuVisiable.value = false
-}
+const collapsed = ref(false)
 </script>
+
+<style scoped>
+/* 侧边栏滚轴 */
+.ant-layout-sider {
+    background: #141414 !important;
+    overflow-y: auto;
+}
+
+.ant-layout-sider::-webkit-scrollbar {
+    display: none;
+}
+
+.ant-menu-item {
+    margin: 0 !important;
+}
+</style>

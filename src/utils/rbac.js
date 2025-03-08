@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores'
 import router from '@/router'
-import { Message } from '@arco-design/web-vue'
+import { message } from 'ant-design-vue'
 
 const baseURL = 'http://127.0.0.1:9000'
 
@@ -31,20 +31,24 @@ instance.interceptors.response.use(
         if (res.data.code === 0) {
             return res.data
         }
+
         // TODO 3. 处理业务失败
         // 处理业务失败, 给错误提示，抛出错误
-        Message.error(res.data.message || '服务异常')
+        if (res.data.code === 90400) {
+            router.push('/login')
+        }
+        message.error(res.data.message || '服务异常')
         return Promise.reject(res.data)
     },
     (err) => {
         // TODO 5. 处理401错误
         // 错误的特殊情况 => 401 权限不足 或 token 过期 => 拦截到登录
-        if (err.response?.status === 401) {
+        if (err.response?.status === 90400) {
             router.push('/login')
         }
 
         // 错误的默认情况 => 只要给提示
-        Message.error(err.response.data.message || '服务异常')
+        message.error(err.response.data.message || '服务异常')
         return Promise.reject(err)
     }
 )

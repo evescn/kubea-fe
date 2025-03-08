@@ -1,5 +1,4 @@
 <script setup>
-import { dayjs } from '@arco-design/web-vue/es/_utils/date'
 import { ref } from 'vue'
 import { apiGetPvsList } from '@/api/kubea/kubea'
 import { useServiceStore } from '@/stores'
@@ -8,60 +7,48 @@ const serviceStore = useServiceStore()
 
 const query = ref({
     page: 1,
-    limit: 10,
+    size: 10,
     cluster: serviceStore.service.k8s_cluster,
     filter_name: ''
 })
 
 const tableColumns = ref([
     {
-        title: 'Name',
-        dataIndex: 'name',
-        slotName: 'name'
+        title: 'Pv名',
+        dataIndex: 'name'
     },
     {
         title: '标签',
-        dataIndex: 'labels',
-        slotName: 'labels'
+        dataIndex: 'labels'
     },
     {
         title: '状态',
-        dataIndex: 'status',
-        slotName: 'status'
+        dataIndex: 'status'
     },
     {
         title: '容量',
-        dataIndex: 'storage',
-        slotName: 'storage'
+        dataIndex: 'storage'
     },
     {
         title: '访问模式',
-        dataIndex: 'accessModes',
-        slotName: 'accessModes'
+        dataIndex: 'accessMode'
     },
     {
         title: '名称空间',
-        dataIndex: 'namespace',
-        render: ({ record }) => {
-            return record.spec.claimRef.namespace
-        }
+        dataIndex: 'namespace'
     },
     {
         title: 'PVC',
-        dataIndex: 'pvc',
-        render: ({ record }) => {
-            return record.spec.claimRef.name
-        }
+        dataIndex: 'pvc'
     },
     {
         title: '创建时间',
-        dataIndex: 'creationTimestamp',
-        slotName: 'time'
+        dataIndex: 'creationTimestamp'
     },
     {
         title: '操作',
-        slotName: 'operate',
-        align: 'center',
+        key: 'action',
+        fixed: 'right',
         width: 200
     }
 ])
@@ -71,13 +58,21 @@ const loadTable = ref(true)
 // 获取列表
 async function getPvList() {
     loadTable.value = true
+    const { size } = query.value
     let params = {
-        ...query.value
+        ...query.value,
+        limit: size
     }
     const res = await apiGetPvsList(params)
     // debugger
     tableData.value = res.data.items || []
     loadTable.value = false
+}
+
+// 翻页
+const onPageChange = ({ page, size }) => {
+    Object.assign(query.value, { size, page })
+    getPvList()
 }
 
 // 搜索
@@ -95,42 +90,78 @@ function ellipsis(val, len) {
 <template>
     <MainHead @dataList="getPvList" @searchChange="handleSearch" />
     <a-card :bodyStyle="{ padding: '10px' }">
-        <a-table :columns="tableColumns" :data="tableData" :loading="loadTable" row-key="id" style="font-size: 12px" @change="handleTableChange">
-            <template #name="{ record }">
-                <span style="font-weight: bold">{{ record.metadata.name }}</span>
+        <a-table
+            :columns="tableColumns"
+            :dataSource="tableData"
+            :loading="loadTable"
+            :pagination="false"
+            row-key="id"
+            style="font-size: 12px"
+        >
+            <template #bodyCell="{ column, record }">
+                <template v-if="column.dataIndex == 'name'">
+                    <span style="font-weight: bold">{{ record.metadata.name }}</span>
+                </template>
+                <template v-if="column.dataIndex === 'labels'">
+                    <div v-for="(val, key) in record.metadata.labels" :key="key">
+                        <a-popover title="Title">
+                            <template #content>
+                                <span> {{ key + ': ' + val }}</span>
+                            </template>
+                            <a-tag color="blue" style="margin-bottom: 3px; cursor: pointer"
+                                >{{ ellipsis(key + ': ' + val, 15) }}
+                            </a-tag>
+                        </a-popover>
+                    </div>
+                </template>
+                <template v-if="column.dataIndex === 'status'">
+                    <span :class="[record.status.phase === 'Bound' ? 'success-status' : 'error-status']">{{
+                        record.status.phase
+                    }}</span>
+                </template>
+                <template v-if="column.dataIndex === 'storage'">
+                    <a-tag color="orange">{{ record.spec.capacity.storage }}</a-tag>
+                </template>
+                <template v-if="column.dataIndex === 'accessMode'">
+                    <div v-for="(val, key) in record.spec.accessModes" :key="key">
+                        <a-tag color="cyan" style="margin-bottom: 5px; cursor: pointer">{{ val }}</a-tag>
+                    </div>
+                </template>
+                <template v-if="column.dataIndex === 'namespace'">
+                    <a-tag color="blue" style="margin-bottom: 5px; cursor: pointer">{{ record.spec.claimRef.namespace }} </a-tag>
+                </template>
+                <template v-if="column.dataIndex === 'pvc'">
+                    <span>{{ record.spec.claimRef.name }}</span>
+                </template>
+                <template v-if="column.dataIndex === 'creationTimestamp'">
+                    <a-tag color="gray">{{ timeTrans(record.metadata.creationTimestamp) }}</a-tag>
+                </template>
+                <template v-if="column.key === 'action'">
+                    <c-button class="pv-button" icon="form-outlined" type="primary" @click="getPvDetail(record)">YML </c-button>
+                    <c-button
+                        class="pv-button"
+                        icon="delete-outlined"
+                        style="margin-bottom: 5px"
+                        type="error"
+                        @click="showConfirm('删除', record.metadata.name, delPv)"
+                        >删除
+                    </c-button>
+                </template>
             </template>
-            <template #labels="{ record }">
-                <div v-for="(val, key) in record.metadata.labels" :key="key">
-                    <a-popover>
-                        <template #content>
-                            <span> {{ key + ': ' + val }}</span>
-                        </template>
-                        <a-tag color="blue" style="margin-bottom: 3px; cursor: pointer">
-                            {{ ellipsis(key + ': ' + val, 15) }}
-                        </a-tag>
-                    </a-popover>
-                </div>
-            </template>
-            <template #status="{ record }">
-                <span :class="[record.status.phase === 'Bound' ? 'success-status' : 'error-status']">{{ record.status.phase }}</span>
-            </template>
-            <template #time="{ record }">
-                <a-tag color="gray">{{ dayjs(record.metadata.creationTimestamp).format('YYYY-MM-DD HH:mm:ss') }}</a-tag>
-            </template>
-            <template #storage="{ record }">
-                <a-tag color="orange">{{ record.spec.capacity.storage }}</a-tag>
-            </template>
-            <template #accessModes="{ record }">
-                <div v-for="(val, key) in record.spec.accessModes" :key="key">
-                    <a-tag color="cyan" style="margin-bottom: 5px; cursor: pointer">{{ val }}</a-tag>
-                </div>
-            </template>
-            <!--<template #time="{ record }">-->
-            <!--    <a-tag color="gray">{{ dayjs(record.metadata.creationTimestamp).format('YYYY-MM-DD HH:mm:ss') }}</a-tag>-->
-            <!--</template>-->
-            <template #operate="{ record }">
-                <!--<c-button class="namespace-button" type="primary" icon="form-outlined" @click="getNamespaceDetail(record)">YML</c-button>-->
-                <!--<c-button style="margin-bottom:5px;" class="namespace-button" type="error" icon="delete-outlined" @click="showConfirm('删除', record.metadata.name, delNamespace)">删除</c-button>-->
+            <template #footer>
+                <a-row align="center" justify="end">
+                    <a-col :span="12">
+                        <div class="page-right">
+                            <Pager
+                                :length="tableData?.length || 0"
+                                :loading="loadTable"
+                                :pageNum="query.page"
+                                :pageSize="query.size"
+                                @change="onPageChange"
+                            />
+                        </div>
+                    </a-col>
+                </a-row>
             </template>
         </a-table>
     </a-card>

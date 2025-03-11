@@ -1,3 +1,6 @@
+// export const baseHost = process.env.VUE_APP_BaseHost
+// export const wsHost = process.env.VUE_APP_WsHost
+
 export default {
     //编辑器配置
     cmOptions: {

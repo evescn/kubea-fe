@@ -16,7 +16,7 @@ defineProps({
 const emit = defineEmits([
     'searchChange',
     'namespaceChange',
-    'namespaceList',
+    // 'namespaceList',
     'envChange',
     'groupChange',
     'urlEnvChange',

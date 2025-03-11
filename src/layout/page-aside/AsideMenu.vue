@@ -1,10 +1,10 @@
 <template>
-    <a-menu :selected-keys="selectedKey" :style="{ height: '100%', boderRight: 0 }" mode="inline">
+    <a-menu :openKeys="openKeys" :selectedKeys="selectedKey" :style="{ height: '100%', boderRight: 0 }" mode="inline">
         <AsideMenuItem :routes="routes" />
     </a-menu>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref, toRefs, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePermissionStore } from '@/stores'
@@ -14,9 +14,13 @@ const route = useRoute()
 const { routes } = toRefs(usePermissionStore())
 
 const selectedKey = ref([])
+const openKeys = ref([])
 
 watchEffect(() => {
     selectedKey.value = [route.name]
+    openKeys.value = route.matched.slice(0, -1).map((item) => item.name)
+    console.log('selectedKey.value', selectedKey.value)
+    console.log('openKeys.value', openKeys.value)
 })
 </script>
 

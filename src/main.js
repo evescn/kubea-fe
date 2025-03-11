@@ -8,6 +8,7 @@ import App from './App.vue'
 import Antd from 'ant-design-vue'
 // 暗黑色主题风格
 import 'ant-design-vue/dist/antd.dark.css'
+// import 'ant-design-vue/dist/antd.css'
 import * as Icons from '@ant-design/icons-vue'
 
 import router from './router'

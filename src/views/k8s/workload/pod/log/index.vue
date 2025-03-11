@@ -47,6 +47,7 @@ async function getContainerLog() {
 //生命周期钩子
 onMounted(() => {
     getContainerList()
+    console.log('123123')
 })
 </script>
 

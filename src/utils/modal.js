@@ -7,7 +7,9 @@ import { ExclamationCircleOutlined } from '@ant-design/icons-vue'
 const actionColors = {
     删除: 'red',
     编辑: 'blue',
-    创建: 'green'
+    创建: 'green',
+    重启: 'red',
+    关闭: 'yellow'
 }
 
 export function showConfirm(action, res, fn) {

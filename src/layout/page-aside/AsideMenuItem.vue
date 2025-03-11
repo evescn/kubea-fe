@@ -4,8 +4,8 @@
             <!-- 处理无子路由的情况 -->
             <a-menu-item
                 v-if="menu.children.length === 1"
-                :key="menu.path"
-                :index="menu.path"
+                :key="menu.children[0].name"
+                :index="menu.children[0].name"
                 @click="jumpTo(menu.children[0].realPath)"
             >
                 <template #icon>

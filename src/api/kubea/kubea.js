@@ -70,5 +70,160 @@ export function apiGetPodLog(params) {
     return request.get(`/api/k8s/pod/log`, { params: params })
 }
 
-// k8sPodNumNp: baseHost + '/api/k8s/pod/numnp',
 // k8sTerminalWs: wsHost + '/ws',
+
+// deployment
+export function apiGetDeploymentsList(params) {
+    return request.get(`/api/k8s/deployments`, { params: params })
+}
+
+export function apiGetDeploymentDetail(params) {
+    return request.get(`/api/k8s/deployment/detail`, { params: params })
+}
+
+export function apiUpdateDeployment(params) {
+    return request.put(`/api/k8s/deployment`, params)
+}
+
+export function apiDelDeployment(params) {
+    return request.delete(`/api/k8s/deployment`, { data: params })
+}
+
+export function apiScaleDeployment(params) {
+    return request.put(`/api/k8s/deployment/scale`, params)
+}
+
+export function apiCreateDeployment(params) {
+    return request.post(`/api/k8s/deployment/create`, params)
+}
+
+export function apiRestartDeployment(params) {
+    return request.put(`/api/k8s/deployment/restart`, params)
+}
+
+//daemonset
+export function apiGetDaemonSetsList(params) {
+    return request.get(`/api/k8s/daemonsets`, { params: params })
+}
+
+export function apiGetDaemonSetDetail(params) {
+    return request.get(`/api/k8s/daemonset/detail`, { params: params })
+}
+
+export function apiUpdateDaemonSet(params) {
+    return request.put(`/api/k8s/daemonset`, params)
+}
+
+export function apiDelDaemonSet(params) {
+    return request.delete(`/api/k8s/daemonset`, { data: params })
+}
+
+// statefulset
+export function apiGetStatefulSetsList(params) {
+    return request.get(`/api/k8s/statefulsets`, { params: params })
+}
+
+export function apiGetStatefulSetDetail(params) {
+    return request.get(`/api/k8s/statefulset/detail`, { params: params })
+}
+
+export function apiUpdateStatefulSet(params) {
+    return request.put(`/api/k8s/statefulset`, params)
+}
+
+export function apiDelStatefulSet(params) {
+    return request.delete(`/api/k8s/statefulset`, { data: params })
+}
+
+// ingress
+export function apiGetIngresssList(params) {
+    return request.get(`/api/k8s/ingresses`, { params: params })
+}
+
+export function apiGetIngressDetail(params) {
+    return request.get(`/api/k8s/ingress/detail`, { params: params })
+}
+
+export function apiUpdateIngress(params) {
+    return request.put(`/api/k8s/ingress`, params)
+}
+
+export function apiDelIngress(params) {
+    return request.delete(`/api/k8s/ingress`, { data: params })
+}
+
+export function apiCreateIngress(params) {
+    return request.post(`/api/k8s/ingress/create`, params)
+}
+
+// service
+export function apiGetSvcsList(params) {
+    return request.get(`/api/k8s/services`, { params: params })
+}
+
+export function apiGetSvcDetail(params) {
+    return request.get(`/api/k8s/service/detail`, { params: params })
+}
+
+export function apiUpdateSvc(params) {
+    return request.put(`/api/k8s/service`, params)
+}
+
+export function apiDelSvc(params) {
+    return request.delete(`/api/k8s/service`, { data: params })
+}
+
+export function apiCreateSvc(params) {
+    return request.post(`/api/k8s/service/create`, params)
+}
+
+//configmap
+export function apiGetConfigmapsList(params) {
+    return request.get(`/api/k8s/configmaps`, { params: params })
+}
+
+export function apiGetConfigmapDetail(params) {
+    return request.get(`/api/k8s/configmap/detail`, { params: params })
+}
+
+export function apiUpdateConfigmap(params) {
+    return request.put(`/api/k8s/configmap`, params)
+}
+
+export function apiDelConfigmap(params) {
+    return request.delete(`/api/k8s/configmap`, { data: params })
+}
+
+//secret
+export function apiGetSecretsList(params) {
+    return request.get(`/api/k8s/secrets`, { params: params })
+}
+
+export function apiGetSecretDetail(params) {
+    return request.get(`/api/k8s/secret/detail`, { params: params })
+}
+
+export function apiUpdateSecret(params) {
+    return request.put(`/api/k8s/secret`, params)
+}
+
+export function apiDelSecret(params) {
+    return request.delete(`/api/k8s/secret`, { data: params })
+}
+
+//pvc
+export function apiGetPvcsList(params) {
+    return request.get(`/api/k8s/pvcs`, { params: params })
+}
+
+export function apiGetPvcDetail(params) {
+    return request.get(`/api/k8s/pvc/detail`, { params: params })
+}
+
+export function apiUpdatePvc(params) {
+    return request.put(`/api/k8s/pvc`, params)
+}
+
+export function apiDelPvc(params) {
+    return request.delete(`/api/k8s/pvc`, { data: params })
+}

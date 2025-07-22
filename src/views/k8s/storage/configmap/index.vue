@@ -100,11 +100,14 @@ async function updateConfigmap() {
         namespace: serviceStore.service.namespace,
         content: JSON.stringify(transObj(yamlModelData.value.contentYaml))
     }
-
-    const res = await apiUpdateConfigmap(params)
-    message.success(res.msg)
-    getConfigmapList()
-    yamlModelData.value = {}
+    try {
+        const res = await apiUpdateConfigmap(params)
+        message.success(res.msg)
+        getConfigmapList()
+        yamlModelData.value = {}
+    } catch (error) {
+        yamlModelData.value = {}
+    }
 }
 
 function transYaml(content) {

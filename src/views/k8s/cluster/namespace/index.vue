@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { apiGetNameSpaceDetail, apiGetNameSpacesList, apiUpdateNameSpace } from '@/api/kubea/kubea'
+import { apiDelNameSpace, apiGetNameSpaceDetail, apiGetNameSpacesList } from '@/api/kubea/kubea'
 import { useServiceStore } from '@/stores'
 import YAML from 'js-yaml'
 import { showConfirm } from '@/utils/modal'
@@ -46,10 +46,8 @@ const loadTable = ref(true)
 // 获取列表
 async function getNamespaceList() {
     loadTable.value = true
-    const { size } = query.value
     let params = {
-        ...query.value,
-        limit: size
+        ...query.value
     }
     const res = await apiGetNameSpacesList(params)
     tableData.value = res.data.items || []
@@ -87,36 +85,21 @@ async function getNamespaceDetail(val) {
     const res = await apiGetNameSpaceDetail(params)
     yamlModelData.value.contentYaml = transYaml(res.data)
     yamlModelData.value.yamlModel = true
-    yamlModelData.value.appLoading = true
-}
-
-async function updateNamespace() {
-    yamlModelData.value.appLoading = true
-    let params = {
-        content: JSON.stringify(transObj(yamlModelData.value.contentYaml)),
-        cluster: serviceStore.service.k8s_cluster
-    }
-    try {
-        const res = await apiUpdateNameSpace(params)
-        console.log(res)
-        message.success(res.msg)
-    } catch (error) {
-        message.success(error)
-    } finally {
-        setTimeout(() => {
-            yamlModelData.value.yamlModel = false
-            getNamespaceList()
-            yamlModelData.value.appLoading = false
-        }, 1000)
-    }
+    yamlModelData.value.isView = true
 }
 
 function transYaml(content) {
     return YAML.dump(content)
 }
 
-function transObj(content) {
-    return YAML.load(content)
+async function delNamespace(name) {
+    let params = {
+        namespace_name: name,
+        cluster: serviceStore.service.k8s_cluster
+    }
+    const res = await apiDelNameSpace(params)
+    message.success(res.msg)
+    getNamespaceList()
 }
 </script>
 
@@ -186,7 +169,7 @@ function transObj(content) {
             </template>
         </a-table>
     </a-card>
-    <ModalYaml v-model="yamlModelData" @update="updateNamespace" />
+    <ModalYaml v-model="yamlModelData" />
 </template>
 
 <style scoped>

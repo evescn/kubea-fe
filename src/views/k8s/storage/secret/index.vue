@@ -104,11 +104,14 @@ async function updateSecret() {
         namespace: serviceStore.service.namespace,
         content: JSON.stringify(transObj(yamlModelData.value.contentYaml))
     }
-
-    const res = await apiUpdateSecret(params)
-    message.success(res.msg)
-    getSecretList()
-    yamlModelData.value = {}
+    try {
+        const res = await apiUpdateSecret(params)
+        message.success(res.msg)
+        getSecretList()
+        yamlModelData.value = {}
+    } catch (error) {
+        yamlModelData.value = {}
+    }
 }
 
 function transYaml(content) {

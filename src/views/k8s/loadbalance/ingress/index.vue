@@ -57,10 +57,8 @@ const appLoading = ref(false)
 
 async function getIngressList() {
     appLoading.value = true
-    const { size } = query.value
     let params = {
-        ...query.value,
-        limit: size
+        ...query.value
     }
     const res = await apiGetIngresssList(params)
     ingressList.value = res.data.items || []
@@ -113,11 +111,14 @@ async function updateIngress() {
         namespace: serviceStore.service.namespace,
         content: JSON.stringify(transObj(yamlModelData.value.contentYaml))
     }
-
-    const res = await apiUpdateIngress(params)
-    message.success(res.msg)
-    getIngressList()
-    yamlModelData.value = {}
+    try {
+        const res = await apiUpdateIngress(params)
+        message.success(res.msg)
+        getIngressList()
+        yamlModelData.value = {}
+    } catch (error) {
+        yamlModelData.value = {}
+    }
 }
 
 function transYaml(content) {
@@ -146,6 +147,7 @@ const createModelData = ref({
     createIngress: {
         name: '',
         namespace: '',
+        host: '',
         path: '',
         path_type: '',
         service_name: '',
@@ -159,7 +161,8 @@ function handleCreate() {
 }
 
 async function createIngress() {
-    const { name, namespace, path, path_type, service_name, service_port, createLabelStr } = createModelData.value.createIngress
+    const { name, namespace, host, path, path_type, service_name, service_port, createLabelStr } =
+        createModelData.value.createIngress
     let reg = new RegExp('(^[A-Za-z]+=[A-Za-z0-9]+).*')
     if (!reg.test(createLabelStr)) {
         message.warning('标签填写异常，请确认后重新填写')
@@ -184,6 +187,7 @@ async function createIngress() {
         service_port: parseInt(service_port)
     }
     httpPaths.push(httpPath)
+    hosts[host] = httpPaths
     let params = {
         name: name,
         namespace: namespace,

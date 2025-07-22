@@ -20,7 +20,9 @@ export function apiGetNodesList(params) {
     return request.get(`/api/k8s/nodes`, { params: params })
 }
 
-//     k8sNodeDetail: baseHost + '/api/k8s/node/detail',
+export function apiGetNodeDetail(params) {
+    return request.get(`/api/k8s/node/detail`, { params: params })
+}
 
 // namespace
 export function apiGetNameSpacesList(params) {
@@ -31,19 +33,22 @@ export function apiGetNameSpaceDetail(params) {
     return request.get(`/api/k8s/namespace/detail`, { params: params })
 }
 
-export function apiUpdateNameSpace(params) {
-    return request.put(`/api/k8s/namespace`, params)
+export function apiDelNameSpace(params) {
+    return request.delete(`/api/k8s/namespace/del`, { data: params })
 }
-
-// k8sNamespaceDel: baseHost + '/api/k8s/namespace',
 
 // pv
 export function apiGetPvsList(params) {
     return request.get(`/api/k8s/pvs`, { params: params })
 }
 
-// k8sPvDetail: baseHost + '/api/k8s/pv/detail',
-// k8sPvDel: baseHost + '/api/k8s/pv',
+export function apiGetPvDetail(params) {
+    return request.get(`/api/k8s/pv/detail`, { params: params })
+}
+
+export function apiDelPv(params) {
+    return request.delete(`/api/k8s/pv/del`, { data: params })
+}
 
 // pod
 export function apiGetPodsList(params) {
@@ -55,11 +60,11 @@ export function apiGetPodDetail(params) {
 }
 
 export function apiUpdatePod(params) {
-    return request.put(`/api/k8s/pod`, params)
+    return request.put(`/api/k8s/pod/update`, params)
 }
 
 export function apiDelPod(params) {
-    return request.delete(`/api/k8s/pod`, { data: params })
+    return request.delete(`/api/k8s/pod/del`, { data: params })
 }
 
 export function apiGetPodContainer(params) {
@@ -82,11 +87,11 @@ export function apiGetDeploymentDetail(params) {
 }
 
 export function apiUpdateDeployment(params) {
-    return request.put(`/api/k8s/deployment`, params)
+    return request.put(`/api/k8s/deployment/update`, params)
 }
 
 export function apiDelDeployment(params) {
-    return request.delete(`/api/k8s/deployment`, { data: params })
+    return request.delete(`/api/k8s/deployment/del`, { data: params })
 }
 
 export function apiScaleDeployment(params) {
@@ -111,11 +116,11 @@ export function apiGetDaemonSetDetail(params) {
 }
 
 export function apiUpdateDaemonSet(params) {
-    return request.put(`/api/k8s/daemonset`, params)
+    return request.put(`/api/k8s/daemonset/update`, params)
 }
 
 export function apiDelDaemonSet(params) {
-    return request.delete(`/api/k8s/daemonset`, { data: params })
+    return request.delete(`/api/k8s/daemonset/del`, { data: params })
 }
 
 // statefulset
@@ -128,32 +133,11 @@ export function apiGetStatefulSetDetail(params) {
 }
 
 export function apiUpdateStatefulSet(params) {
-    return request.put(`/api/k8s/statefulset`, params)
+    return request.put(`/api/k8s/statefulset/update`, params)
 }
 
 export function apiDelStatefulSet(params) {
-    return request.delete(`/api/k8s/statefulset`, { data: params })
-}
-
-// ingress
-export function apiGetIngresssList(params) {
-    return request.get(`/api/k8s/ingresses`, { params: params })
-}
-
-export function apiGetIngressDetail(params) {
-    return request.get(`/api/k8s/ingress/detail`, { params: params })
-}
-
-export function apiUpdateIngress(params) {
-    return request.put(`/api/k8s/ingress`, params)
-}
-
-export function apiDelIngress(params) {
-    return request.delete(`/api/k8s/ingress`, { data: params })
-}
-
-export function apiCreateIngress(params) {
-    return request.post(`/api/k8s/ingress/create`, params)
+    return request.delete(`/api/k8s/statefulset/del`, { data: params })
 }
 
 // service
@@ -166,15 +150,36 @@ export function apiGetSvcDetail(params) {
 }
 
 export function apiUpdateSvc(params) {
-    return request.put(`/api/k8s/service`, params)
+    return request.put(`/api/k8s/service/update`, params)
 }
 
 export function apiDelSvc(params) {
-    return request.delete(`/api/k8s/service`, { data: params })
+    return request.delete(`/api/k8s/service/del`, { data: params })
 }
 
 export function apiCreateSvc(params) {
     return request.post(`/api/k8s/service/create`, params)
+}
+
+// ingress
+export function apiGetIngresssList(params) {
+    return request.get(`/api/k8s/ingresses`, { params: params })
+}
+
+export function apiGetIngressDetail(params) {
+    return request.get(`/api/k8s/ingress/detail`, { params: params })
+}
+
+export function apiUpdateIngress(params) {
+    return request.put(`/api/k8s/ingress/update`, params)
+}
+
+export function apiDelIngress(params) {
+    return request.delete(`/api/k8s/ingress/del`, { data: params })
+}
+
+export function apiCreateIngress(params) {
+    return request.post(`/api/k8s/ingress/create`, params)
 }
 
 //configmap
@@ -187,11 +192,11 @@ export function apiGetConfigmapDetail(params) {
 }
 
 export function apiUpdateConfigmap(params) {
-    return request.put(`/api/k8s/configmap`, params)
+    return request.put(`/api/k8s/configmap/update`, params)
 }
 
 export function apiDelConfigmap(params) {
-    return request.delete(`/api/k8s/configmap`, { data: params })
+    return request.delete(`/api/k8s/configmap/del`, { data: params })
 }
 
 //secret
@@ -204,11 +209,11 @@ export function apiGetSecretDetail(params) {
 }
 
 export function apiUpdateSecret(params) {
-    return request.put(`/api/k8s/secret`, params)
+    return request.put(`/api/k8s/secret/update`, params)
 }
 
 export function apiDelSecret(params) {
-    return request.delete(`/api/k8s/secret`, { data: params })
+    return request.delete(`/api/k8s/secret/del`, { data: params })
 }
 
 //pvc
@@ -221,9 +226,9 @@ export function apiGetPvcDetail(params) {
 }
 
 export function apiUpdatePvc(params) {
-    return request.put(`/api/k8s/pvc`, params)
+    return request.put(`/api/k8s/pvc/update`, params)
 }
 
 export function apiDelPvc(params) {
-    return request.delete(`/api/k8s/pvc`, { data: params })
+    return request.delete(`/api/k8s/pvc/del`, { data: params })
 }

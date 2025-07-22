@@ -58,10 +58,8 @@ const appLoading = ref(false)
 
 async function getSvcList() {
     appLoading.value = true
-    const { size } = query.value
     let params = {
-        ...query.value,
-        limit: size
+        ...query.value
     }
     const res = await apiGetSvcsList(params)
     svcList.value = res.data.items || []
@@ -114,11 +112,14 @@ async function updateSvc() {
         namespace: serviceStore.service.namespace,
         content: JSON.stringify(transObj(yamlModelData.value.contentYaml))
     }
-
-    const res = await apiUpdateSvc(params)
-    message.success(res.msg)
-    getSvcList()
-    yamlModelData.value = {}
+    try {
+        const res = await apiUpdateSvc(params)
+        message.success(res.msg)
+        getSvcList()
+        yamlModelData.value = {}
+    } catch (error) {
+        yamlModelData.value = {}
+    }
 }
 
 function transYaml(content) {

@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores'
 import router from '@/router'
 import { message } from 'ant-design-vue'
 
-const baseURL = 'http://10.0.0.100:29000'
+const baseURL = 'http://localhost:7000'
 // const baseURL = process.env.VUE_APP_BaseHost
 
 const instance = axios.create({

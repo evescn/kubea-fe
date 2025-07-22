@@ -56,10 +56,8 @@ const appLoading = ref(true)
 
 async function getPodList() {
     appLoading.value = true
-    const { size } = query.value
     let params = {
-        ...query.value,
-        limit: size
+        ...query.value
     }
     const res = await apiGetPodsList(params)
     podList.value = res.data.items || []
@@ -124,11 +122,14 @@ async function updatePod() {
         namespace: serviceStore.service.namespace,
         content: JSON.stringify(transObj(yamlModelData.value.contentYaml))
     }
-
-    const res = await apiUpdatePod(params)
-    message.success(res.msg)
-    getPodList()
-    yamlModelData.value = {}
+    try {
+        const res = await apiUpdatePod(params)
+        message.success(res.msg)
+        getPodList()
+        yamlModelData.value = {}
+    } catch (error) {
+        yamlModelData.value = {}
+    }
 }
 
 function transYaml(content) {

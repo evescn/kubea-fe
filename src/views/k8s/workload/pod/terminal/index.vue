@@ -66,7 +66,7 @@ const initSocket = () => {
     }
     let query = router.currentRoute.value.query
     let terminalWsUrl =
-        'ws://10.0.0.101:28082/ws' +
+        'ws://localhost:8082/ws' +
         '?pod_name=' +
         query.pod_name +
         '&container_name=' +

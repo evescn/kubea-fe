@@ -1,7 +1,11 @@
 <script setup>
 import { ref } from 'vue'
-import { apiGetPvsList } from '@/api/kubea/kubea'
+import { apiDelPv, apiGetPvDetail, apiGetPvsList } from '@/api/kubea/kubea'
 import { useServiceStore } from '@/stores'
+import YAML from 'js-yaml'
+import { showConfirm } from '@/utils/modal'
+import { message } from 'ant-design-vue'
+import ModalYaml from '@/components/Model/index.vue'
 
 const serviceStore = useServiceStore()
 
@@ -34,12 +38,12 @@ const tableColumns = ref([
         dataIndex: 'accessMode'
     },
     {
-        title: '名称空间',
-        dataIndex: 'namespace'
-    },
-    {
         title: 'PVC',
         dataIndex: 'pvc'
+    },
+    {
+        title: 'PVC名称空间',
+        dataIndex: 'namespace'
     },
     {
         title: '创建时间',
@@ -58,10 +62,8 @@ const loadTable = ref(true)
 // 获取列表
 async function getPvList() {
     loadTable.value = true
-    const { size } = query.value
     let params = {
-        ...query.value,
-        limit: size
+        ...query.value
     }
     const res = await apiGetPvsList(params)
     // debugger
@@ -85,6 +87,37 @@ function handleSearch(params) {
 function ellipsis(val, len) {
     return val.length > len ? val.substring(0, len) + '...' : val
 }
+
+// YAML
+const yamlModelData = ref({
+    contentYaml: '',
+    yamlModel: false
+})
+
+async function getPvDetail(val) {
+    let params = {
+        cluster: serviceStore.service.k8s_cluster,
+        pv_name: val.metadata.name
+    }
+    const res = await apiGetPvDetail(params)
+    yamlModelData.value.contentYaml = transYaml(res.data)
+    yamlModelData.value.yamlModel = true
+    yamlModelData.value.isView = true
+}
+
+function transYaml(content) {
+    return YAML.dump(content)
+}
+
+async function delPv(name) {
+    let params = {
+        pv_name: name,
+        cluster: serviceStore.service.k8s_cluster
+    }
+    const res = await apiDelPv(params)
+    message.success(res.msg)
+    getPvList()
+}
 </script>
 
 <template>
@@ -99,7 +132,7 @@ function ellipsis(val, len) {
             style="font-size: 12px"
         >
             <template #bodyCell="{ column, record }">
-                <template v-if="column.dataIndex == 'name'">
+                <template v-if="column.dataIndex === 'name'">
                     <span style="font-weight: bold">{{ record.metadata.name }}</span>
                 </template>
                 <template v-if="column.dataIndex === 'labels'">
@@ -127,11 +160,11 @@ function ellipsis(val, len) {
                         <a-tag color="cyan" style="margin-bottom: 5px; cursor: pointer">{{ val }}</a-tag>
                     </div>
                 </template>
-                <template v-if="column.dataIndex === 'namespace'">
-                    <a-tag color="blue" style="margin-bottom: 5px; cursor: pointer">{{ record.spec.claimRef.namespace }} </a-tag>
-                </template>
                 <template v-if="column.dataIndex === 'pvc'">
                     <span>{{ record.spec.claimRef.name }}</span>
+                </template>
+                <template v-if="column.dataIndex === 'namespace'">
+                    <a-tag color="blue" style="margin-bottom: 5px; cursor: pointer">{{ record.spec.claimRef.namespace }} </a-tag>
                 </template>
                 <template v-if="column.dataIndex === 'creationTimestamp'">
                     <a-tag color="gray">{{ timeTrans(record.metadata.creationTimestamp) }}</a-tag>
@@ -165,6 +198,8 @@ function ellipsis(val, len) {
             </template>
         </a-table>
     </a-card>
+
+    <ModalYaml v-model="yamlModelData" />
 </template>
 
 <style scoped>

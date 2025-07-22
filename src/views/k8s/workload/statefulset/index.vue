@@ -104,11 +104,14 @@ async function updateStatefulSet() {
         namespace: serviceStore.service.namespace,
         content: JSON.stringify(transObj(yamlModelData.value.contentYaml))
     }
-
-    const res = await apiUpdateStatefulSet(params)
-    message.success(res.msg)
-    getStatefulSetList()
-    yamlModelData.value = {}
+    try {
+        const res = await apiUpdateStatefulSet(params)
+        message.success(res.msg)
+        getStatefulSetList()
+        yamlModelData.value = {}
+    } catch (error) {
+        yamlModelData.value = {}
+    }
 }
 
 function transYaml(content) {
@@ -154,7 +157,7 @@ async function delStatefulSet(name) {
                     <span style="font-weight: bold">{{ record.metadata.name }}</span>
                 </template>
                 <template v-if="column.dataIndex === 'labels'">
-                    <div v-for="(val, key) in record.metadata.labels" :key="key">
+                    <div v-for="(val, key) in record.spec.template.metadata.labels" :key="key">
                         <a-popover>
                             <template #content>
                                 <span> {{ key + ': ' + val }}</span>

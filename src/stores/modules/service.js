@@ -20,12 +20,15 @@ export const useServiceStore = defineStore('service', () => {
         service.value.clusterList = res.data
         service.value.cluster_num = res.data.length
         service.value.k8s_cluster = res.data[0]
-
         getNameSpaceInfo()
     }
 
     const getNameSpaceInfo = async () => {
-        const res = await apiGetNameSpacesList({ cluster: service.value.k8s_cluster })
+        const res = await apiGetNameSpacesList({
+            page: 1,
+            size: 10000,
+            cluster: service.value.k8s_cluster
+        })
         service.value.namespaceList = res.data.items
         service.value.namespace = res.data.items[0].metadata.name
     }

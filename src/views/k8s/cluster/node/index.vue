@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import { apiGetNodesList } from '@/api/kubea/kubea'
+import { apiGetNodeDetail, apiGetNodesList } from '@/api/kubea/kubea'
 import { useServiceStore } from '@/stores'
+import YAML from 'js-yaml'
 
 const serviceStore = useServiceStore()
 
@@ -33,6 +34,12 @@ const tableColumns = ref([
     {
         title: '创建时间',
         dataIndex: 'creationTimestamp'
+    },
+    {
+        title: '操作',
+        key: 'action',
+        fixed: 'right',
+        width: 200
     }
 ])
 const tableData = ref([])
@@ -41,10 +48,8 @@ const loadTable = ref(true)
 // 获取列表
 async function getNodeList() {
     loadTable.value = true
-    const { size } = query.value
     let params = {
-        ...query.value,
-        limit: size
+        ...query.value
     }
 
     const res = await apiGetNodesList(params)
@@ -71,6 +76,29 @@ function specTrans(str) {
     let num = str.slice(0, -2) / 1000 / 1000
     return num.toFixed(0)
 }
+
+// edit YAML
+const yamlModelData = ref({
+    contentYaml: '',
+    yamlModel: false
+})
+
+async function getNodeDetail(val) {
+    let params = {
+        cluster: serviceStore.service.k8s_cluster,
+        node_name: val.metadata.name
+    }
+
+    const res = await apiGetNodeDetail(params)
+    yamlModelData.value.contentYaml = transYaml(res.data)
+    yamlModelData.value.yamlModel = true
+    // yamlModelData.value.appLoading = true
+    yamlModelData.value.isView = true
+}
+
+function transYaml(content) {
+    return YAML.dump(content)
+}
 </script>
 
 <template>
@@ -95,16 +123,16 @@ function specTrans(str) {
                 <template v-if="column.dataIndex === 'creationTimestamp'">
                     <a-tag color="gray">{{ timeDockerTrans(record.metadata.creationTimestamp) }}</a-tag>
                 </template>
-                <!--<template v-if="column.key === 'action'">-->
-                <!--    <c-button-->
-                <!--        class="node-button"-->
-                <!--        icon="form-outlined"-->
-                <!--        style="margin-bottom: 5px"-->
-                <!--        type="primary"-->
-                <!--        @click="getNodeDetail(record)"-->
-                <!--        >YML-->
-                <!--    </c-button>-->
-                <!--</template>-->
+                <template v-if="column.key === 'action'">
+                    <c-button
+                        class="node-button"
+                        icon="form-outlined"
+                        style="margin-bottom: 5px"
+                        type="primary"
+                        @click="getNodeDetail(record)"
+                        >YML
+                    </c-button>
+                </template>
             </template>
             <template #footer>
                 <a-row align="center" justify="end">
@@ -123,4 +151,6 @@ function specTrans(str) {
             </template>
         </a-table>
     </a-card>
+
+    <ModalYaml v-model="yamlModelData" />
 </template>

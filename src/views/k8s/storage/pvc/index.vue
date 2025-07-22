@@ -112,11 +112,14 @@ async function updatePvc() {
         namespace: serviceStore.service.namespace,
         content: JSON.stringify(transObj(yamlModelData.value.contentYaml))
     }
-
-    const res = await apiUpdatePvc(params)
-    message.success(res.msg)
-    getPvcList()
-    yamlModelData.value = {}
+    try {
+        const res = await apiUpdatePvc(params)
+        message.success(res.msg)
+        getPvcList()
+        yamlModelData.value = {}
+    } catch (error) {
+        yamlModelData.value = {}
+    }
 }
 
 function transYaml(content) {

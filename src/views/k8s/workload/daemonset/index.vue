@@ -48,10 +48,8 @@ const appLoading = ref(false)
 
 async function getDaemonSetList() {
     appLoading.value = true
-    const { size } = query.value
     let params = {
-        ...query.value,
-        limit: size
+        ...query.value
     }
     const res = await apiGetDaemonSetsList(params)
     daemonsetList.value = res.data.items || []
@@ -88,7 +86,7 @@ async function getDaemonSetDetail(val) {
     let params = {
         namespace: serviceStore.service.namespace,
         cluster: serviceStore.service.k8s_cluster,
-        daemonset_name: val.metadata.name
+        ds_name: val.metadata.name
     }
 
     const res = await apiGetDaemonSetDetail(params)
@@ -104,11 +102,14 @@ async function updateDaemonSet() {
         namespace: serviceStore.service.namespace,
         content: JSON.stringify(transObj(yamlModelData.value.contentYaml))
     }
-
-    const res = await apiUpdateDaemonSet(params)
-    message.success(res.msg)
-    getDaemonSetList()
-    yamlModelData.value = {}
+    try {
+        const res = await apiUpdateDaemonSet(params)
+        message.success(res.msg)
+        getDaemonSetList()
+        yamlModelData.value = {}
+    } catch (error) {
+        yamlModelData.value = {}
+    }
 }
 
 function transYaml(content) {
@@ -123,7 +124,7 @@ async function delDaemonSet(name) {
     let params = {
         cluster: serviceStore.service.k8s_cluster,
         namespace: serviceStore.service.namespace,
-        daemonset_name: name
+        ds_name: name
     }
 
     const res = await apiDelDaemonSet(params)
@@ -142,7 +143,7 @@ async function delDaemonSet(name) {
                     <span style="font-weight: bold">{{ record.metadata.name }}</span>
                 </template>
                 <template v-if="column.dataIndex === 'labels'">
-                    <div v-for="(val, key) in record.metadata.labels" :key="key">
+                    <div v-for="(val, key) in record.spec.template.metadata.labels" :key="key">
                         <a-popover>
                             <template #content>
                                 <span> {{ key + ': ' + val }}</span>
